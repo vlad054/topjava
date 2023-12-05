@@ -60,8 +60,7 @@ public class UserMealsUtil {
                         Collectors.summingInt(UserMeal::getCalories)));
 
         return meals.stream()
-                .filter(um ->
-                    isBetweenHalfOpen(um.getDateTime().toLocalTime(), startTime, endTime))
+                .filter(um -> isBetweenHalfOpen(um.getDateTime().toLocalTime(), startTime, endTime))
                 .map(um -> new UserMealWithExcess(um.getDateTime(),
                         um.getDescription(),
                         um.getCalories(),
