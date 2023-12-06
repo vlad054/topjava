@@ -1,9 +1,8 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.MealInit;
+import ru.javawebinar.topjava.storage.MealStorage;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -24,8 +23,8 @@ public class MealServlet extends HttpServlet {
         log.debug("redirect to meals");
 
 
-//        List<Meal> meals = MealInit.initList();
-        List<MealTo> mealsTo = MealsUtil.filteredByStreams(MealInit.initList(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
+        MealStorage mealStorage = new MealStorage();
+        List<MealTo> mealsTo = MealsUtil.filteredByStreams(mealStorage.getMeals(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
         request.setAttribute("listMeals", mealsTo);
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
 

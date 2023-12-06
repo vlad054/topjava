@@ -7,7 +7,10 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<table >
+
+<h3><a href="modify?action=new">Add</a></h3>
+
+<table border="1" >
     <caption>Таблица еды</caption>
     <tr>
         <th>Дата</th>
@@ -25,10 +28,9 @@
         <tr style="color: ${colorExcess}"><td>${meal.getDateTime().toLocalDate()}</td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
-
-    </c:forEach>
-
-<%--    <tr><td>48</td><td>13,5</td><td>49⅓</td><td>31,5</td></tr>--%>
+            <td><a href="modify?uuid=${meal.getUUID()}&action=delete">Delete</a></td>
+            <td><a href="modify?uuid=${meal.getUUID()}&action=edit">Edit</a></td>
+        </c:forEach>
 </table>
 </body>
 </html>
