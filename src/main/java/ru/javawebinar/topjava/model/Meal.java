@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Meal {
@@ -32,6 +33,10 @@ public class Meal {
         this.uuid = UUID.randomUUID().toString();
     }
 
+    public Meal() {
+        this.uuid = UUID.randomUUID().toString();
+    }
+
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -50,6 +55,10 @@ public class Meal {
 
     public LocalTime getTime() {
         return dateTime.toLocalTime();
+    }
+
+    public String getFormatedStringDate(){
+        return (dateTime==null)?null:dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
     }
 
     public String getUuid() {

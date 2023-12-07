@@ -16,7 +16,7 @@ public class MealStorage implements Storage{
     private List<Meal> meals = new ArrayList<>();
 
     public MealStorage(){
-        meals = Arrays.asList(
+        meals = new ArrayList<>(Arrays.asList(
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
@@ -24,7 +24,7 @@ public class MealStorage implements Storage{
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
-        );
+        ));
     }
 
     public List<Meal> getMeals() {
@@ -41,6 +41,11 @@ public class MealStorage implements Storage{
     @Override
     public void addMeal(LocalDateTime dateTime, String description, int calories) {
         meals.add(new Meal(dateTime, description, calories));
+    }
+
+    @Override
+    public void addMeal(Meal meal) {
+        meals.add(meal);
     }
 
     @Override
