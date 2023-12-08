@@ -19,8 +19,8 @@
         <th></th>
         <th></th>
     </tr>
-    <c:set var="colorExcess" value="#008000"></c:set>
     <c:forEach items="${listMeals}" var="meal">
+        <c:set var="colorExcess" value="#008000"></c:set>
         <c:if test="${meal.isExcess()}">
             <c:set var="colorExcess" value="#FF0000"></c:set>
         </c:if>

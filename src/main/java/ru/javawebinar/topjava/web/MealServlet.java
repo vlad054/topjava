@@ -22,13 +22,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
-
     private Storage storage;
+    private final DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-            super.init(config);
-            storage = new MealStorage();
+        super.init(config);
+        storage = new MealStorage();
     }
 
     @Override
@@ -39,8 +39,6 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-//            request.setAttribute("meal", storage.getAllSorted());
-//            request.getRequestDispatcher("meals.jsp").forward(request, response);
             List<MealTo> mealsTo = MealsUtil.filteredByStreams(storage.getMeals(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
             request.setAttribute("listMeals", mealsTo);
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
@@ -66,7 +64,7 @@ public class MealServlet extends HttpServlet {
 
         request.setAttribute("meal", meal);
         request.getRequestDispatcher("modify.jsp")
-        .forward(request, response);
+                .forward(request, response);
     }
 
     @Override
@@ -74,14 +72,14 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String description = request.getParameter("description");
-        LocalDateTime datetime = LocalDateTime.parse(request.getParameter("datetime"), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+        LocalDateTime datetime = LocalDateTime.parse(request.getParameter("datetime"), dateFormater);
         int calories = Integer.parseInt(request.getParameter("calories"));
 
         Meal meal = storage.getMeal(uuid);
 
-        if (meal != null){
+        if (meal != null) {
             storage.editMeal(uuid, datetime, description, calories);
-        } else{
+        } else {
             storage.addMeal(datetime, description, calories);
         }
 

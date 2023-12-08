@@ -6,17 +6,18 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
-public class MealStorage implements Storage{
+public class MealStorage implements Storage {
 
     public final int caloriesPerDay = 2000;
 
-    private List<Meal> meals = new ArrayList<>();
+    private List<Meal> meals;
 
-    public MealStorage(){
-        meals = new ArrayList<>(Arrays.asList(
+    public MealStorage() {
+        meals =
+                Collections.synchronizedList(new ArrayList<>(Arrays.asList(
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
@@ -24,14 +25,14 @@ public class MealStorage implements Storage{
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
-        ));
+        )));
     }
 
     public List<Meal> getMeals() {
         return meals;
     }
 
-    public Meal getMeal(String uuid){
+    public Meal getMeal(String uuid) {
         return meals.stream()
                 .filter(m -> m.getUuid().equals(uuid))
                 .findFirst()
@@ -50,14 +51,18 @@ public class MealStorage implements Storage{
 
     @Override
     public void delMeal(String uuid) {
-        meals.removeIf(m -> m.getUuid().equals(uuid));
+        synchronized (meals) {
+            meals.removeIf(m -> m.getUuid().equals(uuid));
+        }
     }
 
     @Override
     public void editMeal(String uuid, LocalDateTime dateTime, String description, int calories) {
         Meal meal = getMeal(uuid);
-        meal.setCalories(calories);
-        meal.setDateTime(dateTime);
-        meal.setDescription(description);
+        synchronized (meals) {
+            meal.setCalories(calories);
+            meal.setDateTime(dateTime);
+            meal.setDescription(description);
+        }
     }
 }

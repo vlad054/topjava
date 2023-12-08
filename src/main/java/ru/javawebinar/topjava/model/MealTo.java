@@ -6,11 +6,8 @@ import java.util.UUID;
 public class MealTo {
     private String uuid;
     private final LocalDateTime dateTime;
-
     private final String description;
-
     private final int calories;
-
     private final boolean excess;
 
     public LocalDateTime getDateTime() {

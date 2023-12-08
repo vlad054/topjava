@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public class Meal {
     private LocalDateTime dateTime;
-
     private final String uuid;
     private String description;
+    private int calories;
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
@@ -23,8 +23,6 @@ public class Meal {
     public void setCalories(int calories) {
         this.calories = calories;
     }
-
-    private int calories;
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
         this.dateTime = dateTime;
@@ -57,8 +55,8 @@ public class Meal {
         return dateTime.toLocalTime();
     }
 
-    public String getFormatedStringDate(){
-        return (dateTime==null)?null:dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+    public String getFormatedStringDate() {
+        return (dateTime == null) ? null : dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
     }
 
     public String getUuid() {
