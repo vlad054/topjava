@@ -39,7 +39,7 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-            List<MealTo> mealsTo = MealsUtil.filteredByStreams(storage.getMeals(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
+            List<MealTo> mealsTo = MealsUtil.filteredByStreams(storage.getMeals(), LocalTime.of(0, 0), LocalTime.of(23, 59), MealStorage.caloriesPerDay);
             request.setAttribute("listMeals", mealsTo);
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
             return;

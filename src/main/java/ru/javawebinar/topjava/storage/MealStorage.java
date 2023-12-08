@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MealStorage implements Storage {
 
-    public final int caloriesPerDay = 2000;
+    public static final int caloriesPerDay = 2000;
 
     private List<Meal> meals;
 
