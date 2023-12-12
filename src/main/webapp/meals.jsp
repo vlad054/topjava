@@ -10,9 +10,9 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 
-<h3><a href="modify?action=new">Add</a></h3>
+<h3><a href="meals?action=edit">Add</a></h3>
 
-<table border="1" >
+<table border="1">
     <caption>Таблица еды</caption>
     <tr>
         <th>Дата</th>
@@ -22,20 +22,17 @@
         <th></th>
     </tr>
     <c:forEach items="${listMeals}" var="meal">
-        <c:set var="colorExcess" value="#008000"></c:set>
-        <c:if test="${meal.isExcess()}">
-            <c:set var="colorExcess" value="#FF0000"></c:set>
-        </c:if>
+    <c:set var="colorExcess" value="${meal.excess ? '#FF0000': '#008000'}"></c:set>
 
-        <tr style="color: ${colorExcess}">
-            <td>
-                <fmt:parseDate  value="${meal.getDateTime()}"  pattern="yyyyy-MM-dd'T'HH:mm" var="parsedDate" type="both" />
-                <fmt:formatDate value="${parsedDate}" pattern="dd-MM-yyyy HH:mm" />
-            </td>
-            <td>${meal.getDescription()}</td>
-            <td>${meal.getCalories()}</td>
-            <td><a href="modify?id=${meal.getId()}&action=delete">Delete</a></td>
-            <td><a href="modify?id=${meal.getId()}&action=edit">Edit</a></td>
+    <tr style="color: ${colorExcess}">
+        <td>
+            <fmt:parseDate value="${meal.dateTime}" pattern="yyyyy-MM-dd'T'HH:mm" var="parsedDate" type="both"/>
+            <fmt:formatDate value="${parsedDate}" pattern="dd-MM-yyyy HH:mm"/>
+        </td>
+        <td>${meal.description}</td>
+        <td>${meal.calories}</td>
+        <td><a href="meals?id=${meal.id}&action=delete">Delete</a></td>
+        <td><a href="meals?id=${meal.id}&action=edit">Edit</a></td>
         </c:forEach>
 </table>
 </body>

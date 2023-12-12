@@ -7,13 +7,11 @@ import java.time.Month;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MealStorageMemory implements MealStorageInt {
 
     private Integer curId = 0;
-    private List<Meal> meals = new CopyOnWriteArrayList<>();
-//    private ConcurrentMap<Integer, Meal> meals = new ConcurrentHashMap<>();
+    private ConcurrentMap<Integer, Meal> meals = new ConcurrentHashMap<>();
 
     public MealStorageMemory() {
         Init();
@@ -30,35 +28,30 @@ public class MealStorageMemory implements MealStorageInt {
     }
 
     public List<Meal> getAll() {
-        return meals;
+        return new ArrayList<>(meals.values());
     }
 
     public Meal get(Integer id) {
-        return meals.stream()
-                .filter(m -> m.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return meals.getOrDefault(id, null);
     }
-
 
     @Override
     public Meal add(Meal meal) {
         int id = getNextId();
-        meal.setId(curId);
-        meals.add(meal);
+        meal.setId(id);
+        meals.put(id, meal);
         return meal;
     }
 
     @Override
     public void delete(Integer id) {
-        meals.remove(get(id));
+        meals.remove(id);
         curId = curId - 1;
     }
 
     @Override
     public Meal edit(Meal ml) {
-        delete(ml.getId());
-        add(ml);
+        meals.replace(ml.getId(), ml);
         return ml;
     }
 
