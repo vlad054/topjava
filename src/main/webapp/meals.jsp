@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+
 <html lang="ru">
 <head>
     <title>Meals</title>
@@ -25,11 +27,15 @@
             <c:set var="colorExcess" value="#FF0000"></c:set>
         </c:if>
 
-        <tr style="color: ${colorExcess}"><td>${meal.getDateTime().toLocalDate()}</td>
+        <tr style="color: ${colorExcess}">
+            <td>
+                <fmt:parseDate  value="${meal.getDateTime()}"  pattern="yyyyy-MM-dd'T'HH:mm" var="parsedDate" type="both" />
+                <fmt:formatDate value="${parsedDate}" pattern="dd-MM-yyyy HH:mm" />
+            </td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
-            <td><a href="modify?uuid=${meal.getUUID()}&action=delete">Delete</a></td>
-            <td><a href="modify?uuid=${meal.getUUID()}&action=edit">Edit</a></td>
+            <td><a href="modify?id=${meal.getId()}&action=delete">Delete</a></td>
+            <td><a href="modify?id=${meal.getId()}&action=edit">Edit</a></td>
         </c:forEach>
 </table>
 </body>

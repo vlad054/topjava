@@ -7,10 +7,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Meal {
+    //    private final String uuid;
+    private Integer id;
     private LocalDateTime dateTime;
-    private final String uuid;
     private String description;
     private int calories;
+
+    public Meal(LocalDateTime dateTime, String description, int calories) {
+        this.dateTime = dateTime;
+        this.description = description;
+        this.calories = calories;
+    }
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
@@ -24,15 +31,8 @@ public class Meal {
         this.calories = calories;
     }
 
-    public Meal(LocalDateTime dateTime, String description, int calories) {
-        this.dateTime = dateTime;
-        this.description = description;
-        this.calories = calories;
-        this.uuid = UUID.randomUUID().toString();
-    }
-
-    public Meal() {
-        this.uuid = UUID.randomUUID().toString();
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public LocalDateTime getDateTime() {
@@ -55,11 +55,7 @@ public class Meal {
         return dateTime.toLocalTime();
     }
 
-    public String getFormatedStringDate() {
-        return (dateTime == null) ? null : dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-    }
-
-    public String getUuid() {
-        return uuid;
+    public Integer getId() {
+        return id;
     }
 }
