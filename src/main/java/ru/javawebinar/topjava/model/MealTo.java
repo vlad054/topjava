@@ -1,8 +1,6 @@
 package ru.javawebinar.topjava.model;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 public class MealTo {
     private final Integer id;
@@ -35,6 +33,10 @@ public class MealTo {
         return excess;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "MealTo{" +
@@ -43,9 +45,5 @@ public class MealTo {
                 ", calories=" + calories +
                 ", excess=" + excess +
                 '}';
-    }
-
-    public Integer getId() {
-        return id;
     }
 }

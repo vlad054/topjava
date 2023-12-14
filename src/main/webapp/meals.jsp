@@ -26,8 +26,8 @@
 
     <tr style="color: ${colorExcess}">
         <td>
-            <fmt:parseDate value="${meal.dateTime}" pattern="yyyyy-MM-dd'T'HH:mm" var="parsedDate" type="both"/>
-            <fmt:formatDate value="${parsedDate}" pattern="dd-MM-yyyy HH:mm"/>
+            <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both"/>
+            <fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd HH:mm"/>
         </td>
         <td>${meal.description}</td>
         <td>${meal.calories}</td>
