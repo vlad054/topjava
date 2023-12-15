@@ -20,8 +20,8 @@ public class MemoryMealStorage implements MealStorage {
         init();
     }
 
-    public void init() {
-        List<Meal> mealsTmp = Arrays.asList(
+    private void init() {
+        List<Meal> testMeals = Arrays.asList(
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
@@ -29,7 +29,7 @@ public class MemoryMealStorage implements MealStorage {
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
-        mealsTmp.forEach(this::add);
+        testMeals.forEach(this::add);
     }
 
     @Override
@@ -50,6 +50,10 @@ public class MemoryMealStorage implements MealStorage {
         return meal;
     }
 
+    private Integer getNextId() {
+        return currentId.getAndIncrement();
+    }
+
     @Override
     public void delete(int id) {
         meals.remove(id);
@@ -57,10 +61,6 @@ public class MemoryMealStorage implements MealStorage {
 
     @Override
     public Meal edit(Meal meal) {
-        return meals.replace(meal.getId(), meal);
-    }
-
-    private Integer getNextId() {
-        return currentId.getAndIncrement();
+        return (meals.replace(meal.getId(), meal) == null) ? null : meal;
     }
 }

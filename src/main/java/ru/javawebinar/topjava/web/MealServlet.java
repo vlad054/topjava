@@ -37,23 +37,25 @@ public class MealServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        Meal meal = null;
         String strId = request.getParameter("id");
-        switch (action + "") {
+        switch (String.valueOf(action)) {
             case "delete": {
                 log.debug("redirect to meals - delete meal {}", strId);
-                storage.delete(Integer.valueOf(strId));
+                storage.delete(Integer.parseInt(strId));
                 response.sendRedirect("meals");
                 return;
             }
             case "edit": {
+                Meal meal = null;
                 if (strId == null) {
                     log.debug("redirect to meals - new meal");
                 } else {
                     log.debug("redirect to meals - edit meal {}", strId);
-                    meal = storage.get(Integer.valueOf(strId));
+                    meal = storage.get(Integer.parseInt(strId));
                 }
-//                request.setAttribute("act", "edit");
+                request.setAttribute("meal", meal);
+                request.getRequestDispatcher("modifyMeal.jsp")
+                        .forward(request, response);
             }
             break;
             default:
@@ -63,10 +65,6 @@ public class MealServlet extends HttpServlet {
                 log.debug("redirect to meals - list of meals");
                 return;
         }
-
-        request.setAttribute("meal", meal);
-        request.getRequestDispatcher("modifyMeal.jsp")
-                .forward(request, response);
     }
 
     @Override
@@ -74,14 +72,14 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String strId = request.getParameter("id");
         String description = request.getParameter("description");
-        LocalDateTime datetime = LocalDateTime.parse(request.getParameter("datetime"));
+        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("datetime"));
         int calories = Integer.parseInt(request.getParameter("calories"));
 
         if (strId.isEmpty()) {
             log.debug("doPost - add to storage");
-            storage.add(new Meal(datetime, description, calories));
+            storage.add(new Meal(dateTime, description, calories));
         } else {
-            Meal mealEdit = new Meal(datetime, description, calories);
+            Meal mealEdit = new Meal(dateTime, description, calories);
             mealEdit.setId(Integer.valueOf(strId));
             log.debug("doPost - edit to storage {}", strId);
             storage.edit(mealEdit);
