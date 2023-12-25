@@ -8,7 +8,11 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.MealService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
@@ -42,9 +46,28 @@ public class MealRestController {
         service.delete(id, authUserId());
     }
 
-    public void update(Meal meal) {
+    public Meal update(int id) {
+        Meal meal = service.get(id, authUserId());
         log.info("update {} with userid={}", meal, authUserId());
         assureIdConsistent(meal, authUserId());
-        service.update(meal, authUserId());
+        return service.update(meal, authUserId());
+    }
+
+    public Meal save(Meal meal) {
+        log.info("save {}", meal);
+        if (meal.getId() == null) {
+            return create(meal);
+        }
+        return update(meal.getId());
+    }
+
+    public List<Meal> getAllByFilter(LocalDate dateStart, LocalDate dateFinish, LocalTime timeStart, LocalTime timeFinish) {
+        log.info("getAllByFilter");
+        return service.getAll(authUserId()).stream()
+                .filter(meal -> (meal.getDate().compareTo(dateStart != null ? dateStart : LocalDate.MIN) >= 0
+                        && meal.getDate().compareTo(dateFinish != null ? dateFinish : LocalDate.MAX) <= 0
+                        && meal.getTime().compareTo(timeStart != null ? timeStart : LocalTime.MIN) >= 0
+                        && meal.getTime().compareTo(timeFinish != null ? timeFinish : LocalTime.MAX) < 0))
+                .collect(Collectors.toList());
     }
 }

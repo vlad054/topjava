@@ -38,7 +38,7 @@ public class InMemoryMealRepository implements MealRepository {
             return meal;
         }
         // handle case: update, but not present in storage
-        if (Objects.equals(repositoryMealToUser.get(meal.getId()), userId)){
+        if (Objects.equals(repositoryMealToUser.get(meal.getId()), userId)) {
             return repositoryMeal.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
         } else {
             return null;
@@ -47,7 +47,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        if (Objects.equals(repositoryMealToUser.get(id), userId)){
+        if (Objects.equals(repositoryMealToUser.get(id), userId)) {
             repositoryMealToUser.remove(id);
             return repositoryMeal.remove(id) != null;
         } else {
@@ -68,7 +68,7 @@ public class InMemoryMealRepository implements MealRepository {
     public Collection<Meal> getAll(int userId) {
         return repositoryMeal.values().stream()
                 .filter(meal -> Objects.equals(repositoryMealToUser.get(meal.getId()), userId))
-                .sorted(Comparator.comparing(Meal::getDate))
+                .sorted(Comparator.comparing(Meal::getDate).reversed())
                 .collect(Collectors.toList());
     }
 }
