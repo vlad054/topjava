@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
-<%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>--%>
 <html>
 <head>
     <title>Meal list</title>
@@ -23,23 +22,27 @@
     <h2>Meals</h2>
 
     <form method="get" action="meals">
-    <input type="Hidden" name="action" value="filter" >
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
+        <input type="Hidden" name="action" value="filter">
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
             <tr>
                 <th>Date Start:</th>
                 <th>Date Finish:</th>
                 <th>Time Start:</th>
                 <th>Time Finish:</th>
             </tr>
-        </thead>
-        <tr>
-            <td><input type="date" name="dateStart" ></td>
-            <td><input type="date" name="dateFinish" ></td>
-            <td><input type="time" name="timeStart"></td>
-            <td><input type="time" name="timeFinish"></td>
-        </tr>
-    </table>
+            </thead>
+            <tr>
+                <fmt:formatDate pattern="yyyy-MM-dd" value="${sessionScope.dateStart}" var="startSessionDate"/>
+                <fmt:formatDate pattern="yyyy-MM-dd" value="${sessionScope.dateFinish}" var="finishSessionDate"/>
+                <fmt:formatDate pattern="HH:mm" value="${sessionScope.timeStart}" var="startSessionTime"/>
+                <fmt:formatDate pattern="HH:mm" value="${sessionScope.timeFinish}" var="finishSessionTime"/>
+                <td><input type="date" value="${startSessionDate}" name="dateStart"></td>
+                <td><input type="date" value="${finishSessionDate}" name="dateFinish"></td>
+                <td><input type="time" value="${startSessionTime}" name="timeStart"></td>
+                <td><input type="time" value="${finishSessionTime}" name="timeFinish"></td>
+            </tr>
+        </table>
         <button type="submit">Filter</button>
     </form>
 

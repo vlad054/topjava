@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +22,7 @@ public class MealRestController {
 
     @Autowired
     private MealService service;
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public List<Meal> getAll() {
         log.info("getAll");
@@ -46,10 +45,9 @@ public class MealRestController {
         service.delete(id, authUserId());
     }
 
-    public Meal update(int id) {
-        Meal meal = service.get(id, authUserId());
+    public Meal update(Meal meal) {
         log.info("update {} with userid={}", meal, authUserId());
-        assureIdConsistent(meal, authUserId());
+        assureIdConsistent(meal, meal.getId());
         return service.update(meal, authUserId());
     }
 
@@ -58,16 +56,19 @@ public class MealRestController {
         if (meal.getId() == null) {
             return create(meal);
         }
-        return update(meal.getId());
+        return update(meal);
     }
 
     public List<Meal> getAllByFilter(LocalDate dateStart, LocalDate dateFinish, LocalTime timeStart, LocalTime timeFinish) {
         log.info("getAllByFilter");
+        LocalDate localDateStart = dateStart != null ? dateStart : LocalDate.MIN;
+        LocalDate localDateFinish = dateFinish != null ? dateFinish : LocalDate.MAX;
+        LocalTime localTimeStart = timeStart != null ? timeStart : LocalTime.MIN;
+        LocalTime localTimeFinish = timeFinish != null ? timeFinish : LocalTime.MAX;
+
         return service.getAll(authUserId()).stream()
-                .filter(meal -> (meal.getDate().compareTo(dateStart != null ? dateStart : LocalDate.MIN) >= 0
-                        && meal.getDate().compareTo(dateFinish != null ? dateFinish : LocalDate.MAX) <= 0
-                        && meal.getTime().compareTo(timeStart != null ? timeStart : LocalTime.MIN) >= 0
-                        && meal.getTime().compareTo(timeFinish != null ? timeFinish : LocalTime.MAX) < 0))
+                .filter(meal -> (DateTimeUtil.isBetween(meal.getDate(), localDateStart, localDateFinish)
+                        && DateTimeUtil.isBetweenHalfOpen(meal.getTime(), localTimeStart, localTimeFinish)))
                 .collect(Collectors.toList());
     }
 }
