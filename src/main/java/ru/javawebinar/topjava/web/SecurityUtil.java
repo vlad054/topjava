@@ -10,7 +10,7 @@ public class SecurityUtil {
         return authUserId;
     }
 
-    public static void setCurUser(int userId) {
+    public static void setAuthUser(int userId) {
         SecurityUtil.authUserId = userId;
     }
 
