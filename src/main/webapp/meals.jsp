@@ -33,14 +33,20 @@
             </tr>
             </thead>
             <tr>
-                <fmt:formatDate pattern="yyyy-MM-dd" value="${sessionScope.dateStart}" var="startSessionDate"/>
-                <fmt:formatDate pattern="yyyy-MM-dd" value="${sessionScope.dateFinish}" var="finishSessionDate"/>
-                <fmt:formatDate pattern="HH:mm" value="${sessionScope.timeStart}" var="startSessionTime"/>
-                <fmt:formatDate pattern="HH:mm" value="${sessionScope.timeFinish}" var="finishSessionTime"/>
-                <td><input type="date" value="${startSessionDate}" name="dateStart"></td>
-                <td><input type="date" value="${finishSessionDate}" name="dateFinish"></td>
-                <td><input type="time" value="${startSessionTime}" name="timeStart"></td>
-                <td><input type="time" value="${finishSessionTime}" name="timeFinish"></td>
+                <fmt:parseDate value="${requestScope.dateStart}" type="date" pattern="yyyy-MM-dd"
+                               var="parsedDateStart"/>
+                <fmt:formatDate pattern="yyyy-MM-dd" value="${parsedDateStart}" var="startDate"/>
+                <fmt:parseDate value="${requestScope.dateFinish}" type="date" pattern="yyyy-MM-dd"
+                               var="parsedDateFinish"/>
+                <fmt:formatDate pattern="yyyy-MM-dd" value="${parsedDateFinish}" var="finishDate"/>
+                <fmt:parseDate value="${requestScope.timeStart}" type="time" pattern="HH:mm" var="parsedTimeStart"/>
+                <fmt:formatDate pattern="HH:mm" value="${parsedTimeStart}" var="startTime"/>
+                <fmt:parseDate value="${requestScope.timeFinish}" type="time" pattern="HH:mm" var="parsedTimeFinish"/>
+                <fmt:formatDate pattern="HH:mm" value="${parsedTimeFinish}" var="finishTime"/>
+                <td><input type="date" value="${startDate}" name="dateStart"></td>
+                <td><input type="date" value="${finishDate}" name="dateFinish"></td>
+                <td><input type="time" value="${startTime}" name="timeStart"></td>
+                <td><input type="time" value="${finishTime}" name="timeFinish"></td>
             </tr>
         </table>
         <button type="submit">Filter</button>

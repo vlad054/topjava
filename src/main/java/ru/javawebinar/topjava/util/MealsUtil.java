@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 public class MealsUtil {
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
@@ -30,11 +34,15 @@ public class MealsUtil {
             new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Other Обед", 1000)
     );
 
-    public static List<MealTo> getTos(Collection<Meal> mealsAll, Collection<Meal> meals, int caloriesPerDay) {
+    public static List<MealTo> getTos(MealService service, LocalDate dateStart, LocalDate dateFinish,
+                                      LocalTime timeStart, LocalTime timeFinish, int caloriesPerDay) {
+        List<Meal> mealsAll = service.getAll(authUserId());
+        List<Meal> meals = service.getAllByFilter(authUserId(), dateStart, dateFinish, timeStart, timeFinish);
         return filterByPredicate(mealsAll, meals, caloriesPerDay, meal -> true);
     }
 
     private static List<MealTo> filterByPredicate(Collection<Meal> mealsAll, Collection<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
+
         Map<LocalDate, Integer> caloriesSumByDate = mealsAll.stream()
                 .collect(
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))

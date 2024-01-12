@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -40,37 +41,25 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        if (repositoryMealToUser.containsKey(userId)) {
-            return repositoryMealToUser.get(userId).remove(id) != null;
+        Map<Integer, Meal> mealMap = repositoryMealToUser.get(userId);
+        if (mealMap != null) {
+            return mealMap.remove(id) != null;
         }
         return false;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        if (repositoryMealToUser.containsKey(userId)) {
-            return repositoryMealToUser.get(userId).get(id);
-        }
-        return null;
+        Map<Integer, Meal> mealMap = repositoryMealToUser.get(userId);
+        return mealMap != null ? mealMap.get(id) : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        if (repositoryMealToUser.containsKey(userId)) {
-            return repositoryMealToUser.get(userId).values().stream()
-                    .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                    .collect(Collectors.toList());
-        }
-        return null;
-    }
-
-    public List<Meal> getAllByFilter(int userId) {
-        if (repositoryMealToUser.containsKey(userId)) {
-            return repositoryMealToUser.get(userId).values().stream()
-                    .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                    .collect(Collectors.toList());
-        }
-        return null;
+        Map<Integer, Meal> mealMap = repositoryMealToUser.get(userId);
+        return mealMap != null ? mealMap.values().stream()
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList()) : new ArrayList<>();
     }
 
     public List<Meal> getAllByFilter(int userId, LocalDate dateStart, LocalDate dateFinish, LocalTime timeStart, LocalTime timeFinish) {
@@ -79,15 +68,11 @@ public class InMemoryMealRepository implements MealRepository {
         LocalTime localTimeStart = timeStart != null ? timeStart : LocalTime.MIN;
         LocalTime localTimeFinish = timeFinish != null ? timeFinish : LocalTime.MAX;
 
-        if (repositoryMealToUser.containsKey(userId)) {
-            return repositoryMealToUser.get(userId).values().stream()
-                    .filter(meal -> (DateTimeUtil.isBetween(meal.getDate(), localDateStart, localDateFinish)
-                            && DateTimeUtil.isBetweenHalfOpen(meal.getTime(), localTimeStart, localTimeFinish)))
-                    .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                    .collect(Collectors.toList());
-        }
-        return null;
+        Map<Integer, Meal> mealMap = repositoryMealToUser.get(userId);
+        return mealMap != null ? getAll(userId).stream()
+                .filter(meal -> (DateTimeUtil.isBetween(meal.getDate(), localDateStart, localDateFinish)
+                        && DateTimeUtil.isBetweenHalfOpen(meal.getTime(), localTimeStart, localTimeFinish)))
+                .collect(Collectors.toList()) : new ArrayList<>();
     }
-
 }
 

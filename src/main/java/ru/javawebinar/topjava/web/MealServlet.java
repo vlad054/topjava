@@ -12,15 +12,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,7 +50,6 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        HttpSession session = request.getSession();
 
         switch (action == null ? "all" : action) {
             case "delete":
@@ -83,23 +78,22 @@ public class MealServlet extends HttpServlet {
                 LocalTime timeStart = stringTimeStart.isEmpty() ? null : LocalTime.parse(stringTimeStart);
                 LocalTime timeFinish = stringTimeFinish.isEmpty() ? null : LocalTime.parse(stringTimeFinish);
 
-                setDateAttr(session, dateStart, "dateStart");
-                setDateAttr(session, dateFinish, "dateFinish");
-                setTimeAttr(session, timeStart, "timeStart");
-                setTimeAttr(session, timeFinish, "timeFinish");
+                request.setAttribute("dateStart", dateStart);
+                request.setAttribute("dateFinish", dateFinish);
+                request.setAttribute("timeStart", timeStart);
+                request.setAttribute("timeFinish", timeFinish);
 
-                List<MealTo> mealsTo = mealRestController.getAllByFilter(dateStart, dateFinish, timeStart, timeFinish);
+                List<MealTo> mealsToFilter = mealRestController.getAllByFilter(dateStart, dateFinish, timeStart, timeFinish);
 
-                request.setAttribute("meals",
-                        mealsTo);
+                request.setAttribute("meals", mealsToFilter);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll");
-                List<MealTo> mealsTo1 = mealRestController.getAll();
+                List<MealTo> mealsToAll = mealRestController.getAll();
                 request.setAttribute("meals",
-                        mealsTo1);
+                        mealsToAll);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
@@ -113,22 +107,6 @@ public class MealServlet extends HttpServlet {
     @Override
     public void destroy() {
         appCtx.close();
-    }
-
-    private void setDateAttr(HttpSession session, LocalDate date, String name) {
-        if (date != null) {
-            session.setAttribute(name, Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-        } else {
-            session.setAttribute(name, null);
-        }
-    }
-
-    private void setTimeAttr(HttpSession session, LocalTime time, String name) {
-        if (time != null) {
-            session.setAttribute(name, Time.valueOf(time));
-        } else {
-            session.setAttribute(name, null);
-        }
     }
 }
 

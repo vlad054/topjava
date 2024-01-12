@@ -22,11 +22,6 @@ public class InMemoryUserRepository implements UserRepository {
 
     {
         UsersUtil.users.forEach(this::save);
-
-//        save(new User(null, "userName", "aaa@mail.ru", "password", Role.USER));
-//        save(new User(null, "userName", "1email@mail.ru", "password", Role.ADMIN));
-//        save(new User(null, "userName", "zzz@mail.ru", "password", Role.USER));
-//        System.out.println(getAll());
     }
 
     @Override

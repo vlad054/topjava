@@ -25,16 +25,9 @@ public class MealRestController {
     private MealService service;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public List<Meal> getAllMeal() {
-        log.info("getAll");
-        return service.getAll(authUserId());
-    }
-
     public List<MealTo> getAll() {
         log.info("getAll");
-        return MealsUtil.getTos(getAllMeal(),
-                getAllMeal(),
-                SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getTos(service, null, null, null, null, SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal get(int id) {
@@ -69,10 +62,8 @@ public class MealRestController {
 
     public List<MealTo> getAllByFilter(LocalDate dateStart, LocalDate dateFinish, LocalTime timeStart, LocalTime timeFinish) {
         log.info("getAllByFilter");
-
-        return
-                MealsUtil.getTos(service.getAllByFilter(authUserId(), dateStart, dateFinish, timeStart, timeFinish),
-                        service.getAllByFilter(authUserId(), dateStart, dateFinish, timeStart, timeFinish),
-                        SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getTos(service,
+                dateStart, dateFinish, timeStart, timeFinish,
+                SecurityUtil.authUserCaloriesPerDay());
     }
 }
