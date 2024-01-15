@@ -33,20 +33,10 @@
             </tr>
             </thead>
             <tr>
-                <fmt:parseDate value="${requestScope.dateStart}" type="date" pattern="yyyy-MM-dd"
-                               var="parsedDateStart"/>
-                <fmt:formatDate pattern="yyyy-MM-dd" value="${parsedDateStart}" var="startDate"/>
-                <fmt:parseDate value="${requestScope.dateFinish}" type="date" pattern="yyyy-MM-dd"
-                               var="parsedDateFinish"/>
-                <fmt:formatDate pattern="yyyy-MM-dd" value="${parsedDateFinish}" var="finishDate"/>
-                <fmt:parseDate value="${requestScope.timeStart}" type="time" pattern="HH:mm" var="parsedTimeStart"/>
-                <fmt:formatDate pattern="HH:mm" value="${parsedTimeStart}" var="startTime"/>
-                <fmt:parseDate value="${requestScope.timeFinish}" type="time" pattern="HH:mm" var="parsedTimeFinish"/>
-                <fmt:formatDate pattern="HH:mm" value="${parsedTimeFinish}" var="finishTime"/>
-                <td><input type="date" value="${startDate}" name="dateStart"></td>
-                <td><input type="date" value="${finishDate}" name="dateFinish"></td>
-                <td><input type="time" value="${startTime}" name="timeStart"></td>
-                <td><input type="time" value="${finishTime}" name="timeFinish"></td>
+                <td><input type="date" value="${param.dateStart}" name="dateStart"></td>
+                <td><input type="date" value="${param.dateFinish}" name="dateFinish"></td>
+                <td><input type="time" value="${param.timeStart}" name="timeStart"></td>
+                <td><input type="time" value="${param.timeFinish}" name="timeFinish"></td>
             </tr>
         </table>
         <button type="submit">Filter</button>

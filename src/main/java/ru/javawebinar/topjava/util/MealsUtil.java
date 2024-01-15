@@ -8,10 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -37,7 +34,17 @@ public class MealsUtil {
     public static List<MealTo> getTos(MealService service, LocalDate dateStart, LocalDate dateFinish,
                                       LocalTime timeStart, LocalTime timeFinish, int caloriesPerDay) {
         List<Meal> mealsAll = service.getAll(authUserId());
-        List<Meal> meals = service.getAllByFilter(authUserId(), dateStart, dateFinish, timeStart, timeFinish);
+
+        LocalDate localDateStart = dateStart != null ? dateStart : LocalDate.MIN;
+        LocalDate localDateFinish = dateFinish != null ? dateFinish : LocalDate.MAX;
+        LocalTime localTimeStart = timeStart != null ? timeStart : LocalTime.MIN;
+        LocalTime localTimeFinish = timeFinish != null ? timeFinish : LocalTime.MAX;
+
+        List<Meal> meals = mealsAll.stream()
+                    .filter(meal -> (DateTimeUtil.isBetween(meal.getDate(), localDateStart, localDateFinish)
+                            && DateTimeUtil.isBetweenHalfOpen(meal.getTime(), localTimeStart, localTimeFinish)))
+                    .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                    .collect(Collectors.toList());
         return filterByPredicate(mealsAll, meals, caloriesPerDay, meal -> true);
     }
 

@@ -78,11 +78,6 @@ public class MealServlet extends HttpServlet {
                 LocalTime timeStart = stringTimeStart.isEmpty() ? null : LocalTime.parse(stringTimeStart);
                 LocalTime timeFinish = stringTimeFinish.isEmpty() ? null : LocalTime.parse(stringTimeFinish);
 
-                request.setAttribute("dateStart", dateStart);
-                request.setAttribute("dateFinish", dateFinish);
-                request.setAttribute("timeStart", timeStart);
-                request.setAttribute("timeFinish", timeFinish);
-
                 List<MealTo> mealsToFilter = mealRestController.getAllByFilter(dateStart, dateFinish, timeStart, timeFinish);
 
                 request.setAttribute("meals", mealsToFilter);
@@ -92,8 +87,7 @@ public class MealServlet extends HttpServlet {
             default:
                 log.info("getAll");
                 List<MealTo> mealsToAll = mealRestController.getAll();
-                request.setAttribute("meals",
-                        mealsToAll);
+                request.setAttribute("meals", mealsToAll);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

@@ -3,12 +3,9 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +39,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public boolean delete(int id, int userId) {
         Map<Integer, Meal> mealMap = repositoryMealToUser.get(userId);
-        if (mealMap != null) {
-            return mealMap.remove(id) != null;
-        }
-        return false;
+        return mealMap != null && (mealMap.remove(id) != null);
     }
 
     @Override
@@ -59,20 +53,7 @@ public class InMemoryMealRepository implements MealRepository {
         Map<Integer, Meal> mealMap = repositoryMealToUser.get(userId);
         return mealMap != null ? mealMap.values().stream()
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList()) : new ArrayList<>();
-    }
-
-    public List<Meal> getAllByFilter(int userId, LocalDate dateStart, LocalDate dateFinish, LocalTime timeStart, LocalTime timeFinish) {
-        LocalDate localDateStart = dateStart != null ? dateStart : LocalDate.MIN;
-        LocalDate localDateFinish = dateFinish != null ? dateFinish : LocalDate.MAX;
-        LocalTime localTimeStart = timeStart != null ? timeStart : LocalTime.MIN;
-        LocalTime localTimeFinish = timeFinish != null ? timeFinish : LocalTime.MAX;
-
-        Map<Integer, Meal> mealMap = repositoryMealToUser.get(userId);
-        return mealMap != null ? getAll(userId).stream()
-                .filter(meal -> (DateTimeUtil.isBetween(meal.getDate(), localDateStart, localDateFinish)
-                        && DateTimeUtil.isBetweenHalfOpen(meal.getTime(), localTimeStart, localTimeFinish)))
-                .collect(Collectors.toList()) : new ArrayList<>();
+                .collect(Collectors.toList()) : Collections.emptyList();
     }
 }
 
