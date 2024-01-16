@@ -8,8 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
@@ -33,30 +34,16 @@ public class MealsUtil {
 
     public static List<MealTo> getTos(MealService service, LocalDate dateStart, LocalDate dateFinish,
                                       LocalTime timeStart, LocalTime timeFinish, int caloriesPerDay) {
-        List<Meal> mealsAll = service.getAll(authUserId());
-
-        LocalDate localDateStart = dateStart != null ? dateStart : LocalDate.MIN;
-        LocalDate localDateFinish = dateFinish != null ? dateFinish : LocalDate.MAX;
         LocalTime localTimeStart = timeStart != null ? timeStart : LocalTime.MIN;
         LocalTime localTimeFinish = timeFinish != null ? timeFinish : LocalTime.MAX;
 
-        List<Meal> meals = mealsAll.stream()
-                    .filter(meal -> (DateTimeUtil.isBetween(meal.getDate(), localDateStart, localDateFinish)
-                            && DateTimeUtil.isBetweenHalfOpen(meal.getTime(), localTimeStart, localTimeFinish)))
-                    .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                    .collect(Collectors.toList());
-        return filterByPredicate(mealsAll, meals, caloriesPerDay, meal -> true);
-    }
-
-    private static List<MealTo> filterByPredicate(Collection<Meal> mealsAll, Collection<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
-
-        Map<LocalDate, Integer> caloriesSumByDate = mealsAll.stream()
+        List<Meal> meals = service.getAllByFilter(authUserId(), dateStart, dateFinish, null, null);
+        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
                 );
-
         return meals.stream()
-                .filter(filter)
+                .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(), localTimeStart, localTimeFinish))
                 .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
     }
