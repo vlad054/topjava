@@ -38,13 +38,13 @@ public class MealServiceTest extends TestCase {
 
     @Test
     public void testGet() {
-        Meal meal = service.get(MealTestData.meal302.getId(), USER_ID);
-        assertMatch(meal, MealTestData.meal302);
+        Meal meal = service.get(MealTestData.meal2.getId(), USER_ID);
+        assertMatch(meal, MealTestData.meal2);
     }
 
     @Test
     public void testDelete() {
-        int id = MealTestData.meal301.getId();
+        int id = MealTestData.meal1.getId();
         service.delete(id, USER_ID);
         assertThrows(NotFoundException.class, () -> service.get(id, USER_ID));
     }
@@ -53,6 +53,6 @@ public class MealServiceTest extends TestCase {
     public void testUpdate() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        MealTestData.assertMatch(service.get(MealTestData.meal314.getId(), USER_ID), getUpdated());
+        MealTestData.assertMatch(service.get(MealTestData.meal7.getId(), USER_ID), getUpdated());
     }
 }
