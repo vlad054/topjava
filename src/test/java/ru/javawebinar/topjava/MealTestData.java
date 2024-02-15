@@ -1,16 +1,20 @@
 package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
     public static final int MEAL_ID = START_SEQ + 3;
+    public static final int NOT_EXIST_ID = 2000;
 
     public static final Meal meal1 = new Meal(MEAL_ID, LocalDateTime.of(2020, 1, 30, 10, 0), "Завтрак", 500);
     public static final Meal meal2 = new Meal(MEAL_ID + 1, LocalDateTime.of(2020, 1, 30, 13, 0), "Обед", 1000);
@@ -38,7 +42,10 @@ public class MealTestData {
     }
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
-        assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields("user_id").isEqualTo(expected);
+        assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields("id").isEqualTo(expected);
     }
 
+    public static Meal getNew() {
+        return new Meal(LocalDateTime.of(2020, 1, 10, 10, 0), "Завтрак", 500);
+    }
 }
