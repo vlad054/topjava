@@ -33,6 +33,6 @@ CREATE TABLE meals
     calories         INTEGER                           NOT NULL,
     datetime	     TIMESTAMP                         NOT NULL
 );
-CREATE UNIQUE INDEX meals_unique_userdatetime_idx ON meals (user_id, dateTime);
+CREATE UNIQUE INDEX meals_unique_user_datetime_idx ON meals (user_id, dateTime);
 
 

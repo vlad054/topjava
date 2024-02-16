@@ -64,11 +64,6 @@ public class MealServiceTest {
     }
 
     @Test
-    public void updateOtherUserMeal() {
-        assertThrows(NotFoundException.class, () -> service.update(meal1, ADMIN_ID));
-    }
-
-    @Test
     public void getNotExistMeal() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_EXIST_ID, USER_ID));
     }
@@ -80,7 +75,7 @@ public class MealServiceTest {
     }
 
     @Test
-    public void BetweenInclusive() {
+    public void getBetweenInclusive() {
         List<Meal> filtered = service.getBetweenInclusive(LocalDate.of(2020, 1, 30),
                 LocalDate.of(2020, 1, 30),
                 USER_ID);
@@ -102,7 +97,6 @@ public class MealServiceTest {
 
     @Test
     public void deleteNotExistMeal() {
-        int id = MealTestData.meal7.getId();
         assertThrows(NotFoundException.class, () -> service.delete(NOT_EXIST_ID, USER_ID));
     }
 
@@ -112,4 +106,10 @@ public class MealServiceTest {
         service.update(updated, USER_ID);
         MealTestData.assertMatch(service.get(MealTestData.meal7.getId(), USER_ID), getUpdated());
     }
+
+    @Test
+    public void updateOtherUserMeal() {
+        assertThrows(NotFoundException.class, () -> service.update(meal1, ADMIN_ID));
+    }
+
 }

@@ -16,7 +16,6 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration("classpath:spring-app-mem.xml")
 @RunWith(SpringRunner.class)
-@Ignore
 public class InMemoryAdminRestControllerSpringTest {
 
     @Autowired
